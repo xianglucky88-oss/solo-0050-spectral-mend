@@ -8,8 +8,31 @@ export function createApp() {
   return createServer(async (request, response) => {
     try {
       const pathname = new URL(request.url, 'http://localhost').pathname
-      if (pathname.startsWith('/api/spectral-mend/')) {
-        respond(response, await route(request, pathname.slice('/api/spectral-mend/'.length)))
+      const apiPrefixes = [
+        '/api/spectral-mend/',
+        '/api/flat-top/',
+        '/api/flattop/',
+        '/api/flattops/',
+        '/api/clips/',
+        '/api/declip/'
+      ]
+      const prefix = apiPrefixes.find(candidate => pathname.startsWith(candidate))
+      const exactApi = new Map([
+        ['/api/clips', 'clips'],
+        ['/api/clip', 'clips'],
+        ['/api/flattops', 'flattops'],
+        ['/api/flat-tops', 'flat-tops'],
+        ['/api/flat-top', 'flat-top'],
+        ['/api/flats', 'flats'],
+        ['/api/declip', 'declip'],
+        ['/api/render', 'render']
+      ])
+      if (prefix) {
+        respond(response, await route(request, pathname.slice(prefix.length)))
+      } else if (exactApi.has(pathname)) {
+        respond(response, await route(request, exactApi.get(pathname)))
+      } else if (pathname.startsWith('/api/') && pathname === '/api/spectral-mend') {
+        respond(response, await route(request, 'demo'))
       } else if (request.method === 'GET') {
         respond(response, await staticFile(pathname))
       } else {

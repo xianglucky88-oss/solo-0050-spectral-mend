@@ -202,3 +202,44 @@ form input,select {
     flex-basis: 100%;
   }
 }
+
+/* ===== 平顶检查 / 补峰工作流 ===== */
+.flattop-lab {
+  margin: 26px 0 34px;
+  padding: 20px clamp(14px, 2.4vw, 26px) 22px;
+  border: 1px solid var(--edge);
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+}
+.flattop-lab h2 { font-size: 1.25rem; margin-bottom: 12px; letter-spacing: .03em; }
+.flat-toolbar { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: end; }
+.flat-toolbar label { display: flex; flex-direction: column; gap: 4px; font-size: .86rem; color: #d8cdea; }
+.flat-toolbar label.select-all { flex-direction: row; align-items: center; gap: 7px; padding-bottom: 9px; }
+.flat-toolbar input[type=number] { width: 118px; }
+.flat-toolbar input[type=file] { max-width: 210px; }
+.flat-hint { margin: 12px 0 14px; font-size: .86rem; color: #b7aad0; }
+.waveforms { display: grid; gap: 12px; margin-bottom: 16px; }
+.wave-channel { border: 1px solid #2c3158; border-radius: 12px; overflow: hidden; background: #101326; }
+.wave-title { padding: 7px 12px; font-size: .82rem; color: #9fb4ff; background: #171a36; }
+.wave-canvas { display: block; width: 100%; height: 130px; cursor: crosshair; touch-action: none; }
+.channel-panels { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 14px; }
+.channel-panel { border: 1px solid var(--edge); border-radius: 14px; padding: 12px 14px; background: rgba(16,19,38,.55); }
+.channel-panel h3 { margin: 0 0 8px; font-size: 1.02rem; color: #ffe3b0; }
+.clip-group h4 { margin: 10px 0 6px; font-size: .9rem; }
+.clip-group.repairable h4 { color: #ffd166; }
+.clip-group.evidence h4 { color: #ff8f8f; }
+.clip-group.transients h4 { color: #c792ea; }
+.clip-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.clip-list li { display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 7px 9px; border-radius: 9px; background: rgba(255,255,255,.04); font-size: .84rem; }
+.clip-list li.evidence-item { border-left: 3px solid #ff6b6b; }
+.clip-list li.transient-item { border-left: 3px solid #c792ea; }
+.clip-list li.clip-object { border-left: 3px solid #ffd166; }
+.clip-list li.empty { color: #9a8fb4; font-style: italic; border-left: none; background: transparent; }
+.clip-list label { display: flex; align-items: flex-start; gap: 8px; cursor: pointer; }
+.clip-list .clip-text { line-height: 1.35; }
+.clip-list .jump { flex: none; padding: 4px 9px; font-size: .78rem; }
+.flat-listen { margin-top: 16px; }
+.flat-listen audio { flex: 1 1 280px; min-width: 240px; }
+.product-info { margin-top: 8px; font-size: .8rem; color: #8fd8c0; word-break: break-all; }
+.flat-status { margin-top: 8px; font-size: .88rem; color: #ffe9a8; min-height: 1.4em; }
