@@ -1,0 +1,134 @@
+{
+  "project_shape": "fullstack",
+  "modules": [
+    {
+      "id": "http",
+      "path": "server/http",
+      "responsibility": "输入尺寸、HTTP 及内容边界"
+    },
+    {
+      "id": "audio",
+      "path": "server/audio",
+      "responsibility": "WAV 解包、量化和 PCM 布局"
+    },
+    {
+      "id": "spectrum",
+      "path": "server/spectrum",
+      "responsibility": "加窗、傅里叶变换和谱图聚合"
+    },
+    {
+      "id": "repair",
+      "path": "server/repair",
+      "responsibility": "选区、跨窗重建、信号计量和导出"
+    },
+    {
+      "id": "ui",
+      "path": "public/js",
+      "responsibility": "频谱选区交互和双版本对听"
+    }
+  ],
+  "workflows": [
+    {
+      "id": "wav",
+      "name": "录音识别",
+      "entry": "POST inspect",
+      "success": "保留声道数、采样率和帧数",
+      "failure": "不合规 PCM 格式拒绝",
+      "verification": "node --input-type=module -e 'import {inspect,repair} from \"./server/repair/session.mjs\"; import {demo} from \"./server/audio/demo.mjs\"; const sample=demo(); const a=inspect(sample); if(a.channels!==2||a.rate!==16000||a.frames!==48000)process.exit(1); console.log(a.frames);'",
+      "module_ids": [
+        "http",
+        "audio",
+        "spectrum",
+        "repair"
+      ],
+      "steps": [
+        "从 POST inspect 解析业务输入",
+        "应用领域状态与边界，保留声道数、采样率和帧数"
+      ]
+    },
+    {
+      "id": "plot",
+      "name": "谱图计算",
+      "entry": "POST inspect",
+      "success": "窗长变化使真实频格宽度变化",
+      "failure": "无效窗长拒绝",
+      "verification": "node --input-type=module -e 'import {inspect,repair} from \"./server/repair/session.mjs\"; import {demo} from \"./server/audio/demo.mjs\"; const sample=demo(); const a=inspect({...sample,size:1024}); if(a.spectrum.values[0].length!==513||a.spectrum.binHz!==15.625)process.exit(1); console.log(a.spectrum.binHz);'",
+      "module_ids": [
+        "audio",
+        "spectrum",
+        "repair",
+        "ui"
+      ],
+      "steps": [
+        "从 POST inspect 解析业务输入",
+        "应用领域状态与边界，窗长变化使真实频格宽度变化"
+      ]
+    },
+    {
+      "id": "edit",
+      "name": "频带衰减",
+      "entry": "POST repair",
+      "success": "污染选区附近频带能量下降",
+      "failure": "边界非法的框拒绝",
+      "verification": "node --input-type=module -e 'import {inspect,repair} from \"./server/repair/session.mjs\"; import {demo} from \"./server/audio/demo.mjs\"; const sample=demo(); const a=inspect(sample); const b=repair({...sample,regions:[sample.region]}); const k=Math.round(1600/a.spectrum.binHz); if(b.spectrum.values[90][k]>=a.spectrum.values[90][k]-15)process.exit(1); console.log(b.editedWindows);'",
+      "module_ids": [
+        "audio",
+        "spectrum",
+        "repair"
+      ],
+      "steps": [
+        "从 POST repair 解析业务输入",
+        "应用领域状态与边界，污染选区附近频带能量下降"
+      ]
+    },
+    {
+      "id": "bypass",
+      "name": "旁路重建",
+      "entry": "POST repair",
+      "success": "无选区的输出逐帧等价",
+      "failure": "不完整 RIFF 数据拒绝",
+      "verification": "node --input-type=module -e 'import {inspect,repair} from \"./server/repair/session.mjs\"; import {demo} from \"./server/audio/demo.mjs\"; const sample=demo(); const a=repair({...sample,regions:[]}); if(a.wav!==sample.wav||a.editedWindows)process.exit(1); console.log(a.wav.length);'",
+      "module_ids": [
+        "audio",
+        "spectrum",
+        "repair"
+      ],
+      "steps": [
+        "从 POST repair 解析业务输入",
+        "应用领域状态与边界，无选区的输出逐帧等价"
+      ]
+    },
+    {
+      "id": "output",
+      "name": "量测和 PCM 输出",
+      "entry": "POST repair",
+      "success": "保持源帧数并给出逐声道差值",
+      "failure": "超过时长或选区数量限制拒绝",
+      "verification": "node --input-type=module -e 'import {inspect,repair} from \"./server/repair/session.mjs\"; import {demo} from \"./server/audio/demo.mjs\"; const sample=demo(); const a=repair({...sample,regions:[sample.region]}); const b=inspect(a); if(b.frames!==48000||a.metrics.length!==2||!a.metrics.every(c=>c.differenceRms>0))process.exit(1); console.log(a.metrics);'",
+      "module_ids": [
+        "http",
+        "audio",
+        "spectrum",
+        "repair",
+        "ui"
+      ],
+      "steps": [
+        "从 POST repair 解析业务输入",
+        "应用领域状态与边界，保持源帧数并给出逐声道差值"
+      ]
+    }
+  ],
+  "complexity": {
+    "mechanisms": [
+      "RIFF 数据块解析",
+      "PCM 编解码",
+      "加窗变换",
+      "时间频率聚合",
+      "边缘平滑",
+      "频谱共轭增益",
+      "重叠相加重建",
+      "量化前计量",
+      "原声与修复对听"
+    ]
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "language": "JavaScript (Node.js 20+ / 原生浏览器 ES modules)",
+  "project_shape": "fullstack",
+  "source_extensions": [
+    ".mjs"
+  ],
+  "build_command": "npm run build",
+  "testing": "deferred",
+  "workflow_checks": [
+    {
+      "workflow_id": "wav",
+      "command": "node --input-type=module -e 'import {inspect,repair} from \"./server/repair/session.mjs\"; import {demo} from \"./server/audio/demo.mjs\"; const sample=demo(); const a=inspect(sample); if(a.channels!==2||a.rate!==16000||a.frames!==48000)process.exit(1); console.log(a.frames);'"
+    },
+    {
+      "workflow_id": "plot",
+      "command": "node --input-type=module -e 'import {inspect,repair} from \"./server/repair/session.mjs\"; import {demo} from \"./server/audio/demo.mjs\"; const sample=demo(); const a=inspect({...sample,size:1024}); if(a.spectrum.values[0].length!==513||a.spectrum.binHz!==15.625)process.exit(1); console.log(a.spectrum.binHz);'"
+    },
+    {
+      "workflow_id": "edit",
+      "command": "node --input-type=module -e 'import {inspect,repair} from \"./server/repair/session.mjs\"; import {demo} from \"./server/audio/demo.mjs\"; const sample=demo(); const a=inspect(sample); const b=repair({...sample,regions:[sample.region]}); const k=Math.round(1600/a.spectrum.binHz); if(b.spectrum.values[90][k]>=a.spectrum.values[90][k]-15)process.exit(1); console.log(b.editedWindows);'"
+    },
+    {
+      "workflow_id": "bypass",
+      "command": "node --input-type=module -e 'import {inspect,repair} from \"./server/repair/session.mjs\"; import {demo} from \"./server/audio/demo.mjs\"; const sample=demo(); const a=repair({...sample,regions:[]}); if(a.wav!==sample.wav||a.editedWindows)process.exit(1); console.log(a.wav.length);'"
+    },
+    {
+      "workflow_id": "output",
+      "command": "node --input-type=module -e 'import {inspect,repair} from \"./server/repair/session.mjs\"; import {demo} from \"./server/audio/demo.mjs\"; const sample=demo(); const a=repair({...sample,regions:[sample.region]}); const b=inspect(a); if(b.frames!==48000||a.metrics.length!==2||!a.metrics.every(c=>c.differenceRms>0))process.exit(1); console.log(a.metrics);'"
+    }
+  ]
+}
