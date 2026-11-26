@@ -2,9 +2,32 @@
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>听纹修复</title><link rel="stylesheet" href="/style.css"><script type="module" src="/js/main.mjs"></script></head>
 <body><main><header><div><h1>听纹修复</h1><p id="source-info">打开录音查看频谱</p></div><div class="actions">
-<label>导入 PCM WAV<input id="file" type="file" accept=".wav,audio/wav"></label><button id="demo">打开内置录音</button></div></header>
-<section class="work"><h2>频谱</h2><div class="spectrum"><span id="max-freq"></span><div class="layers"><canvas id="plot" width="900" height="290" aria-label="录音的时间频率图"></canvas><canvas id="mask" width="900" height="290" aria-label="拖动以填充选区范围"></canvas></div><div class="axis"><span>0 秒</span><span id="max-time"></span></div></div>
-<div class="listen"><div role="group" aria-label="对听信号"><button id="original" aria-pressed="true" disabled>原声</button><button id="result" aria-pressed="false" disabled>修复</button></div><audio controls preload="metadata"></audio><button id="export" disabled>导出 WAV</button></div></section>
-<section class="edit"><div><h2>频谱选区</h2><form><label>窗长<select name="size"><option>256</option><option selected>512</option><option>1024</option></select></label>
-<label>开始 / 秒<input name="start" type="number" step="any" required></label><label>结束 / 秒<input name="end" type="number" step="any" required></label><label>低频 / 赫兹<input name="low" type="number" step="any" required></label><label>高频 / 赫兹<input name="high" type="number" step="any" required></label><label>衰减 / dB<input name="db" type="number" step="any" value="18" required></label><button id="add" disabled>添加选区</button></form></div>
-<div class="render"><ul id="regions"></ul><button id="apply" class="primary" disabled>生成修复</button><p id="status" role="status"></p><p id="metrics"></p></div></section></main></body></html>
+<label>导入 PCM WAV<input id="file" type="file" accept=".wav,audio/wav"></label><button id="demo">打开内置录音</button>
+<button id="glide-demo">打开上滑音演示</button></div></header>
+<section class="work"><h2>频谱</h2><div class="spectrum"><span id="max-freq"></span><div class="layers"><canvas id="plot" width="900" height="290" aria-label="录音的时间频率图"></canvas><canvas id="mask" width="900" height="290" aria-label="拖动以圈选时间与频带"></canvas></div><div class="axis"><span>0 秒</span><span id="max-time"></span></div></div>
+<div class="listen"><div role="group" aria-label="对听信号" class="mode-tabs">
+<button id="original" aria-pressed="true" disabled>原声</button>
+<button id="result-repair" aria-pressed="false" disabled>衰减修复</button>
+<button id="result-glide" aria-pressed="false" disabled>上滑音</button></div>
+<audio controls preload="metadata"></audio><button id="export" disabled>导出 WAV</button></div></section>
+
+<section class="edit" id="repair-panel"><div><h2>频谱衰减选区</h2><form id="repair-form"><label>窗长<select name="size"><option>256</option><option selected>512</option><option>1024</option></select></label>
+<label>开始 / 秒<input name="start" type="number" step="any" required></label><label>结束 / 秒<input name="end" type="number" step="any" required></label><label>低频 / 赫兹<input name="low" type="number" step="any" required></label><label>高频 / 赫兹<input name="high" type="number" step="any" required></label><label>衰减 / dB<input name="db" type="number" step="any" value="18" required></label><button id="add" type="button" disabled>添加选区</button></form></div>
+<div class="render"><ul id="regions"></ul><button id="apply" class="primary" type="button" disabled>生成衰减修复</button><p id="status-repair" class="statusline" role="status"></p><p id="metrics-repair" class="statusline"></p></div></section>
+
+<section class="edit glide-panel" id="glide-panel"><div><h2>机关平音改上滑音</h2>
+<p class="hint">在谱图上圈出机关平音所在时段与频带，再填基频搜索范围、要移动的谐波阶数、各阶边带半宽和目标基频起止值。无法唯一辨认时会停在原声并说明原因。</p>
+<form id="glide-form">
+<label>开始 / 秒<input name="gstart" type="number" step="any" required></label>
+<label>结束 / 秒<input name="gend" type="number" step="any" required></label>
+<label>搜索下限 / Hz<input name="glow" type="number" step="any" required></label>
+<label>搜索上限 / Hz<input name="ghigh" type="number" step="any" required></label>
+<label>谐波阶数（逗号分隔）<input name="gorders" type="text" value="1,2,3" required></label>
+<label>边带半宽 / Hz（一个值或逐阶）<input name="gsidebands" type="text" required></label>
+<label>目标基频起 / Hz<input name="gtargetStart" type="number" step="any" required></label>
+<label>目标基频止 / Hz<input name="gtargetEnd" type="number" step="any" required></label>
+<button id="glide-inspect" type="button" disabled>辨识机关平音</button>
+<button id="glide-apply" class="primary" type="button" disabled>生成上滑音</button>
+</form></div>
+<div class="render"><ul id="glide-findings"></ul><p id="status-glide" class="statusline" role="status"></p><p id="metrics-glide" class="statusline"></p></div></section>
+</main></body></html>

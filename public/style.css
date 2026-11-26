@@ -192,10 +192,60 @@ form input,select {
   color: #e9bdaf;
 }
 
+.glide-panel {
+  border-top: 1px solid var(--edge);
+  padding-top: 14px;
+}
+
+.glide-panel .hint {
+  font-size: .8rem;
+  color: #b6a8c6;
+  margin: 4px 0 8px;
+}
+
+.glide-panel form {
+  grid-template-columns: repeat(4,minmax(0,1fr));
+}
+
+.mode-tabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.statusline {
+  font-size: .82rem;
+  color: #c3b7d2;
+  margin-top: 6px;
+}
+
+#glide-findings {
+  margin: 0 0 8px;
+  padding: 0;
+  list-style: none;
+  font-size: .8rem;
+}
+
+#glide-findings li {
+  margin-bottom: 4px;
+  color: #d9c6e6;
+}
+
+#glide-findings .blocked {
+  color: #ff9d8a;
+}
+
+#glide-findings .ok {
+  color: #a7e0b4;
+}
+
 @media(max-width:700px) {
   .edit {
     grid-template-columns: 1fr;
     gap: 12px;
+  }
+  .glide-panel form {
+    grid-template-columns: repeat(2,minmax(0,1fr));
   }
   audio {
     order: 3;
