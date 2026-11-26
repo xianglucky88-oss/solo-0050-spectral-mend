@@ -7,4 +7,26 @@
 <div class="listen"><div role="group" aria-label="对听信号"><button id="original" aria-pressed="true" disabled>原声</button><button id="result" aria-pressed="false" disabled>修复</button></div><audio controls preload="metadata"></audio><button id="export" disabled>导出 WAV</button></div></section>
 <section class="edit"><div><h2>频谱选区</h2><form><label>窗长<select name="size"><option>256</option><option selected>512</option><option>1024</option></select></label>
 <label>开始 / 秒<input name="start" type="number" step="any" required></label><label>结束 / 秒<input name="end" type="number" step="any" required></label><label>低频 / 赫兹<input name="low" type="number" step="any" required></label><label>高频 / 赫兹<input name="high" type="number" step="any" required></label><label>衰减 / dB<input name="db" type="number" step="any" value="18" required></label><button id="add" disabled>添加选区</button></form></div>
-<div class="render"><ul id="regions"></ul><button id="apply" class="primary" disabled>生成修复</button><p id="status" role="status"></p><p id="metrics"></p></div></section></main></body></html>
+<div class="render"><ul id="regions"></ul><button id="apply" class="primary" disabled>生成修复</button><p id="status" role="status"></p><p id="metrics"></p></div></section>
+<section class="handoff"><h2>逐项核听交接</h2>
+<div class="roles">
+<div class="role"><h3>发送剪辑师 · 打包核听项</h3>
+<form id="probe-form">
+<label>核听首帧<input name="first" type="number" min="0" required></label>
+<label>核听末帧<input name="last" type="number" min="0" required></label>
+<label>带内频点 / 赫兹<input name="frequencies" placeholder="如 400,1600" required></label>
+<label>保留带外频点 / 赫兹<input name="retained" placeholder="可选，如 293"></label>
+<button id="prepare" type="button" disabled>打包交接记录</button>
+</form>
+<p id="prepare-status" class="role-status"></p>
+<div class="row"><button id="download-bundle" disabled>下载交接记录</button><button id="download-prepared-wav" disabled>下载原件 PCM</button></div>
+</div>
+<div class="role"><h3>接收剪辑师 · 核准与合入</h3>
+<div class="row"><label>载入交接记录<input id="bundle-file" type="file" accept=".json,application/json"></label>
+<label>接收稿 WAV（留空用原件）<input id="working-file" type="file" accept=".wav,audio/wav"></label></div>
+<div id="commit-items"></div>
+<div class="row"><button id="commit" class="primary" disabled>按项合入 / 重做</button><button id="reopen" disabled>重开核验</button><button id="download-result" disabled>下载成品 PCM</button></div>
+<p id="commit-status" class="role-status"></p>
+</div>
+</div>
+</section></main></body></html>

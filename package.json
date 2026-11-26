@@ -4,5 +4,9 @@
   "private": true,
   "type": "module",
   "engines": {"node": ">=20"},
-  "scripts": {"start": "node server/index.mjs", "build": "node scripts/check-modules.mjs"}
+  "scripts": {
+    "start": "node server/index.mjs",
+    "build": "node scripts/check-modules.mjs",
+    "test:handoff": "node verify/readings.test.mjs && node verify/handoff.test.mjs && node verify/handoff.advanced.test.mjs"
+  }
 }

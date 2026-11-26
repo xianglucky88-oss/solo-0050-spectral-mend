@@ -202,3 +202,111 @@ form input,select {
     flex-basis: 100%;
   }
 }
+
+.handoff {
+  margin-top: 18px;
+  padding: 16px 15px;
+  background: #212032;
+  border: 1px solid var(--edge);
+  border-radius: 9px;
+}
+
+.handoff h3 {
+  margin: 0 0 8px;
+  font-size: .92rem;
+  color: #eec9bd;
+}
+
+.roles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  margin-top: 8px;
+}
+
+.role {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+}
+
+#probe-form {
+  grid-template-columns: 1fr 1fr;
+}
+
+.row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.row label {
+  display: grid;
+  font-size: .78rem;
+  gap: 2px;
+  color: #d4c4df;
+}
+
+.role-status {
+  font-size: .8rem;
+  color: #e9bdaf;
+  min-height: 1.2em;
+}
+
+#commit-items {
+  display: grid;
+  gap: 6px;
+  max-height: 220px;
+  overflow: auto;
+}
+
+.commit-item {
+  border: 1px solid var(--edge);
+  border-radius: 6px;
+  padding: 7px 9px;
+  font-size: .8rem;
+  display: grid;
+  gap: 5px;
+  background: #242036;
+}
+
+.commit-item header {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.commit-item .state {
+  font-variant-numeric: tabular-nums;
+}
+
+.state.merged, .state.already-merged, .state.merged-redo { color: #9fe0b6; }
+.state.conflict, .state.retained, .state.record-mismatch { color: #f0a08e; }
+
+.commit-item label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: .78rem;
+}
+
+.commit-item input[type=text] {
+  width: 100%;
+  padding: 2px 5px;
+  border: 1px solid var(--edge);
+  background: #1b1830;
+  border-radius: 4px;
+}
+
+.readings {
+  font-size: .74rem;
+  color: #c3b7d2;
+  white-space: pre-wrap;
+}
+
+@media(max-width:700px) {
+  .roles {
+    grid-template-columns: 1fr;
+  }
+}

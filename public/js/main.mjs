@@ -7,13 +7,23 @@ import { selection } from './selection.mjs'
 import { overlays } from './overlays.mjs'
 import { fields, regionFrom, showRegions } from './regions.mjs'
 import { showAudio, showMetrics } from './readouts.mjs'
+import { handoffPanel } from './handoff.mjs'
 
 const q = selector => document.querySelector(selector)
 const form = q('form')
 const listen = audition(q('audio'))
 let source, view, applied, regions = [], busy = false
+const sourceListeners = []
 const note = text => { q('#status').textContent = text }
 const size = () => Number(form.elements.size.value)
+
+const handoff = handoffPanel({
+  view: () => view,
+  sourceWav: () => source,
+  regions: () => regions,
+  size,
+  onSource: fn => sourceListeners.push(fn),
+})
 
 function mark() {
   overlays(q('#mask'), regions, view.spectrum.duration, view.rate)
@@ -51,11 +61,13 @@ async function load(wav, preferred, keepRegions = false) {
   applied = undefined
   for (const id of ['#result','#export']) q(id).disabled = true
   for (const id of ['#original','#apply','#add']) q(id).disabled = false
+  handoff.enable()
   showAudio(view)
   show('source', keepRegions)
   showMetrics(q('#metrics'), null)
   if (!keepRegions) fields(form, preferred ?? { start: 0, end: view.spectrum.duration, low: 0, high: view.rate / 2, db: 18 })
   mark()
+  sourceListeners.forEach(fn => fn(view))
   note('已打开原声。可拖选谱图，也可输入精确选区。')
 }
 
