@@ -1,5 +1,7 @@
 export function overlays(canvas, regions, duration, rate) {
-  const ctx = canvas.getContext('2d'), { width, height } = canvas
+  const ctx = canvas.getContext('2d')
+  if (!ctx) return
+  const { width, height } = canvas
   ctx.clearRect(0, 0, width, height)
   ctx.strokeStyle = '#fff4ca'; ctx.fillStyle = '#fff4ca26'; ctx.lineWidth = 2
   regions.forEach(region => {

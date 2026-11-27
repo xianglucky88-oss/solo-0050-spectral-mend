@@ -2,6 +2,7 @@ import { spectralColor } from './palette.mjs'
 
 export function spectrogram(canvas, spectrum) {
   const ctx = canvas.getContext('2d')
+  if (!ctx || typeof ctx.createImageData !== 'function' || !spectrum?.values?.length) return
   const values = spectrum.values
   const bins = values[0].length, width = canvas.width, height = canvas.height
   const bitmap = ctx.createImageData(width, height)

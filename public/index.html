@@ -3,8 +3,14 @@
 <title>听纹修复</title><link rel="stylesheet" href="/style.css"><script type="module" src="/js/main.mjs"></script></head>
 <body><main><header><div><h1>听纹修复</h1><p id="source-info">打开录音查看频谱</p></div><div class="actions">
 <label>导入 PCM WAV<input id="file" type="file" accept=".wav,audio/wav"></label><button id="demo">打开内置录音</button></div></header>
-<section class="work"><h2>频谱</h2><div class="spectrum"><span id="max-freq"></span><div class="layers"><canvas id="plot" width="900" height="290" aria-label="录音的时间频率图"></canvas><canvas id="mask" width="900" height="290" aria-label="拖动以填充选区范围"></canvas></div><div class="axis"><span>0 秒</span><span id="max-time"></span></div></div>
+<section class="work"><div class="work-head"><h2>频谱</h2><div class="history-bar" role="group" aria-label="撤销重做与版本">
+<button id="undo" type="button" disabled aria-keyshortcuts="Control+Z Meta+Z">↶ 撤销</button>
+<button id="redo" type="button" disabled aria-keyshortcuts="Control+Shift+Z Control+Y">↷ 重做</button>
+<nav id="history" aria-label="版本列表"><ol id="versions"></ol></nav>
+</div></div>
+<div id="restore-error" class="restore-error" hidden><span id="restore-message"></span><button id="retry" type="button">重试恢复</button></div>
+<div class="spectrum"><span id="max-freq"></span><div class="layers"><canvas id="plot" width="900" height="290" aria-label="录音的时间频率图"></canvas><canvas id="mask" width="900" height="290" aria-label="拖动以填充选区范围"></canvas></div><div class="axis"><span>0 秒</span><span id="max-time"></span></div></div>
 <div class="listen"><div role="group" aria-label="对听信号"><button id="original" aria-pressed="true" disabled>原声</button><button id="result" aria-pressed="false" disabled>修复</button></div><audio controls preload="metadata"></audio><button id="export" disabled>导出 WAV</button></div></section>
 <section class="edit"><div><h2>频谱选区</h2><form><label>窗长<select name="size"><option>256</option><option selected>512</option><option>1024</option></select></label>
-<label>开始 / 秒<input name="start" type="number" step="any" required></label><label>结束 / 秒<input name="end" type="number" step="any" required></label><label>低频 / 赫兹<input name="low" type="number" step="any" required></label><label>高频 / 赫兹<input name="high" type="number" step="any" required></label><label>衰减 / dB<input name="db" type="number" step="any" value="18" required></label><button id="add" disabled>添加选区</button></form></div>
+<label>开始 / 秒<input name="start" type="number" step="any" required></label><label>结束 / 秒<input name="end" type="number" step="any" required></label><label>低频 / 赫兹<input name="low" type="number" step="any" required></label><label>高频 / 赫兹<input name="high" type="number" step="any" required></label><label>衰减 / dB<input name="db" type="number" step="any" value="18" required></label><button id="add" type="submit" disabled>添加选区</button></form></div>
 <div class="render"><ul id="regions"></ul><button id="apply" class="primary" disabled>生成修复</button><p id="status" role="status"></p><p id="metrics"></p></div></section></main></body></html>

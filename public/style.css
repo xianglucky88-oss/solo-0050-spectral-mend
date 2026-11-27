@@ -65,6 +65,72 @@ header p,#metrics {
   border-radius: 9px;
 }
 
+.work-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.history-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+#history {
+  min-width: 0;
+}
+
+#versions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-width: min(620px, 52vw);
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.version-chip {
+  white-space: nowrap;
+  font-size: .74rem;
+  padding: 3px 8px;
+  border-color: #5d4f6e;
+  background: #262238;
+}
+
+.version-chip[aria-current="true"] {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: #3a2c3a;
+}
+
+.restore-error:not([hidden]) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 8px 0 2px;
+  padding: 8px 10px;
+  border: 1px solid #c98a6a;
+  border-radius: 6px;
+  background: #3d2a2c;
+  color: #f3cdbd;
+  font-size: .85rem;
+}
+
+.restore-error button {
+  border-color: #e0a07f;
+  color: #ffd9c4;
+  flex: none;
+}
+
 .spectrum {
   margin-block: 5px 10px;
   font-size: .78rem;
