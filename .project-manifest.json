@@ -22,9 +22,14 @@
       "responsibility": "选区、跨窗重建、信号计量和导出"
     },
     {
+      "id": "room",
+      "path": "server/room",
+      "responsibility": "Toeplitz 反卷积、整数码微调和重放校验"
+    },
+    {
       "id": "ui",
       "path": "public/js",
-      "responsibility": "频谱选区交互和双版本对听"
+      "responsibility": "频谱选区交互、双版本对听和房间响应面板"
     }
   ],
   "workflows": [
@@ -116,6 +121,43 @@
         "从 POST repair 解析业务输入",
         "应用领域状态与边界，保持源帧数并给出逐声道差值"
       ]
+    },
+    {
+      "id": "room-export",
+      "name": "房间响应导出",
+      "entry": "POST room-export",
+      "success": "重放逐帧差至多 2 码且首个超 2 码帧一致，交付双声道 PCM16",
+      "failure": "静音探测音、收音缺尾或无合格响应拒绝并说明",
+      "verification": "node verify/room-check.mjs",
+      "module_ids": [
+        "http",
+        "audio",
+        "room",
+        "ui"
+      ],
+      "steps": [
+        "校验单声道探测音与双声道收音同采样率 PCM16",
+        "Toeplitz 最小二乘反卷积并在整数码网格微调",
+        "用导出件重放并逐帧核对完整尾部"
+      ]
+    },
+    {
+      "id": "room-proof",
+      "name": "干声校样",
+      "entry": "POST room-proof",
+      "success": "纯房间声逐帧确定、保留完整尾部电平和声道顺序",
+      "failure": "采样率或声道不合规拒绝",
+      "verification": "node verify/room-check.mjs",
+      "module_ids": [
+        "http",
+        "audio",
+        "room",
+        "ui"
+      ],
+      "steps": [
+        "干声与房间响应逐声道固定点卷积",
+        "32768 满幅舍入、半码远离零、超幅裁切"
+      ]
     }
   ],
   "complexity": {
@@ -128,7 +170,12 @@
       "频谱共轭增益",
       "重叠相加重建",
       "量化前计量",
-      "原声与修复对听"
+      "原声与修复对听",
+      "Toeplitz 自相关正规方程",
+      "Levinson-Durbin 递推",
+      "整数码坐标下降",
+      "固定点卷积与饱和裁切",
+      "重放一致性校验"
     ]
   }
 }

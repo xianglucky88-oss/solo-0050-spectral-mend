@@ -7,4 +7,22 @@
 <div class="listen"><div role="group" aria-label="对听信号"><button id="original" aria-pressed="true" disabled>原声</button><button id="result" aria-pressed="false" disabled>修复</button></div><audio controls preload="metadata"></audio><button id="export" disabled>导出 WAV</button></div></section>
 <section class="edit"><div><h2>频谱选区</h2><form><label>窗长<select name="size"><option>256</option><option selected>512</option><option>1024</option></select></label>
 <label>开始 / 秒<input name="start" type="number" step="any" required></label><label>结束 / 秒<input name="end" type="number" step="any" required></label><label>低频 / 赫兹<input name="low" type="number" step="any" required></label><label>高频 / 赫兹<input name="high" type="number" step="any" required></label><label>衰减 / dB<input name="db" type="number" step="any" value="18" required></label><button id="add" disabled>添加选区</button></form></div>
-<div class="render"><ul id="regions"></ul><button id="apply" class="primary" disabled>生成修复</button><p id="status" role="status"></p><p id="metrics"></p></div></section></main></body></html>
+<div class="render"><ul id="regions"></ul><button id="apply" class="primary" disabled>生成修复</button><p id="status" role="status"></p><p id="metrics"></p></div></section>
+<section class="room"><h2>房间响应</h2>
+<div class="room-inputs">
+<label>探测音 · 单声道 PCM WAV<input id="room-probe" type="file" accept=".wav,audio/wav"></label>
+<label>收音 · 双声道 PCM WAV<input id="room-capture" type="file" accept=".wav,audio/wav"></label>
+<label>收音起播标记 / 帧<input id="room-marker" type="number" min="0" step="1" placeholder="帧号"></label>
+<label>响应帧数<input id="room-frames" type="number" min="1" step="1" placeholder="帧数"></label>
+<button id="room-export" class="primary" disabled>导出房间响应</button>
+</div>
+<div class="room-output">
+<div role="group" aria-label="房间响应成品"><audio id="room-audio" controls preload="metadata"></audio><button id="room-download" disabled>下载响应 WAV</button></div>
+<p id="room-status" role="status"></p>
+</div>
+<div class="proof">
+<label>另一段干声 · 同采样率单声道 PCM WAV<input id="room-dry" type="file" accept=".wav,audio/wav"></label>
+<button id="room-proof" disabled>生成纯房间声校样</button>
+<div role="group" aria-label="纯房间声成品"><audio id="proof-audio" controls preload="metadata"></audio><button id="proof-download" disabled>下载校样 WAV</button></div>
+<p id="proof-status" role="status"></p>
+</div></section></main></body></html>

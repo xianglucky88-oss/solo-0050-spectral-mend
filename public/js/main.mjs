@@ -7,6 +7,7 @@ import { selection } from './selection.mjs'
 import { overlays } from './overlays.mjs'
 import { fields, regionFrom, showRegions } from './regions.mjs'
 import { showAudio, showMetrics } from './readouts.mjs'
+import './room.mjs'
 
 const q = selector => document.querySelector(selector)
 const form = q('form')
