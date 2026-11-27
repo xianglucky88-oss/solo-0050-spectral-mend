@@ -10,9 +10,13 @@
 
 修复结果的峰值与差值 RMS 在量化前计算，饱和帧对应量化溢出位置。导出执行舍入并饱和到 PCM16。对听使用同一个播放控件，切换信号时尽量延续当前播放点。
 
+串漏修复要求双声道 PCM16 节目：每路圈三段互不重叠的独奏，另圈一段与校准分开的待修节目。录前安静、原档无削波，直达声在原帧，串漏晚 1 至 8 帧，可多峰或反相；各方向在节目内固定，单位脉冲的串入绝对值之和至多为原幅值的一半。每方向只凭圈内独奏，采用能解释最多有声段且至少解释两段的关系；入选段两路逐帧预测误差至多为该段直达峰值的 1%，同组采用段按各段直达峰值归一的总平方误差取最低。固定另一方向后，若最大支持的不同解释使节目同路同帧还原 PCM16 相差超过 64 码，报该方向歧义。有声不足两段报缺证，至少两段却无法互证报校准不一致。三种情况都指出方向、保留原声且不出件。成功时去掉圈外传入的串漏，两路同频也还原各自时间、幅度和相位；校准区与圈外逐样保留，成品与原采样率、帧数和声道顺序一致。
+
 ## 接口
 
 `GET /api/spectral-mend/demo` 返回内置录音及建议区。`POST /api/spectral-mend/inspect` 接收 Base64 `wav` 和可选 `size` 并返回谱图。`POST /api/spectral-mend/repair` 另收 `regions`，各项含 `start`、`end`、`low`、`high`、`db`，返回 PCM WAV、谱图和逐声道计量。
+
+`GET /api/spectral-mend/bleed-demo` 返回串漏示例及建议的独奏与待修节目。`POST /api/spectral-mend/calibrate` 接收 Base64 `wav` 与 `calibration`（两声道 `solos` 各至多三段、`program` 一段），返回成品 WAV 与逐声道计量；缺证、校准不一致或歧义时返回 `status: "error"` 与 `issues`，不出 WAV。细则见 `BLEED.md`。
 
 ## 模块
 
@@ -20,8 +24,9 @@
 - `server/audio` 负责WAV 解包、量化和 PCM 布局。
 - `server/spectrum` 负责加窗、傅里叶变换和谱图聚合。
 - `server/repair` 负责选区、跨窗重建、信号计量和导出。
+- `server/bleed` 负责串漏校准、关系拟合与节目还原。
 - `public/js` 负责频谱选区交互和双版本对听。
 
 ## 验证
 
-`npm run build` 检查 ECMAScript 模块语法及服务装载。`.project-runtime.json` 记录可复跑的有界生产工作流检查。自动化测试套件留待后续。
+`npm run build` 检查 ECMAScript 模块语法、服务装载与串漏自检。`.project-runtime.json` 记录可复跑的有界生产工作流检查。自动化测试套件留待后续。

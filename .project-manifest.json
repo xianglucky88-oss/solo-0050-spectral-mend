@@ -25,6 +25,11 @@
       "id": "ui",
       "path": "public/js",
       "responsibility": "频谱选区交互和双版本对听"
+    },
+    {
+      "id": "bleed",
+      "path": "server/bleed",
+      "responsibility": "串漏校准、关系拟合与节目还原"
     }
   ],
   "workflows": [
@@ -115,6 +120,23 @@
       "steps": [
         "从 POST repair 解析业务输入",
         "应用领域状态与边界，保持源帧数并给出逐声道差值"
+      ]
+    },
+    {
+      "id": "bleed",
+      "name": "串漏校准与还原",
+      "entry": "POST calibrate",
+      "success": "去掉待修节目内传入的串漏，校准区与圈外逐样保留，两路同频也还原各自时间、幅度和相位",
+      "failure": "缺证、校准不一致或歧义时指出方向、保留原声且不出成品",
+      "verification": "node scripts/check-bleed.mjs",
+      "module_ids": [
+        "audio",
+        "bleed"
+      ],
+      "steps": [
+        "从 POST calibrate 解析双声道节目与每路独奏、待修节目",
+        "每方向只用该方向独奏，拟合能解释最多有声段且至少两段的关系",
+        "固定另一方向排查节目还原歧义，通过才逐帧还原并导出"
       ]
     }
   ],

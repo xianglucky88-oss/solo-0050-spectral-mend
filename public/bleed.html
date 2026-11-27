@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>串漏修复</title><link rel="stylesheet" href="/style.css"><script type="module" src="/js/bleed.mjs"></script></head>
+<body><main><header><div><h1>串漏修复</h1><p id="source-info">打开双声道节目开始校准</p></div><div class="actions">
+<label>导入 PCM WAV<input id="file" type="file" accept=".wav,audio/wav"></label><button id="demo">打开内置示例</button><a href="/">频谱修复</a></div></header>
+
+<section class="work"><h2>声道与选区</h2>
+<p id="hint" class="hint">每路圈三段互不重叠的独奏，另圈一段与校准分开的待修节目。串漏只凭圈内独奏拟合。</p>
+<div class="axis"><span>0 秒</span><span id="max-time"></span></div>
+<div class="strip" id="strip"></div>
+<div class="controls">
+  <label>当前声道<select id="channel"><option value="0">左声道</option><option value="1">右声道</option></select></label>
+  <label>圈选类型<select id="kind"><option value="solo">独奏（校准）</option><option value="program">待修节目</option></select></label>
+  <button id="clear" type="button">清空该声道</button>
+</div>
+<ul id="regions"></ul>
+</section>
+
+<section class="work"><h2>成品</h2>
+<div class="listen"><div role="group" aria-label="对听信号"><button id="original" aria-pressed="true" disabled>原声</button><button id="result" aria-pressed="false" disabled>还原</button></div><audio controls preload="metadata"></audio><button id="export" disabled>下载 WAV</button></div>
+<div class="render"><button id="apply" class="primary" disabled>校准并还原</button><p id="status" role="status"></p><ul id="issues"></ul><p id="metrics"></p></div>
+</section></main></body></html>
