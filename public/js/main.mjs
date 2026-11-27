@@ -9,7 +9,7 @@ import { fields, regionFrom, showRegions } from './regions.mjs'
 import { showAudio, showMetrics } from './readouts.mjs'
 
 const q = selector => document.querySelector(selector)
-const form = q('form')
+const form = q('#spectral-form')
 const listen = audition(q('audio'))
 let source, view, applied, regions = [], busy = false
 const note = text => { q('#status').textContent = text }

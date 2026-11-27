@@ -202,3 +202,148 @@ form input,select {
     flex-basis: 100%;
   }
 }
+
+/* 机器声参考消声双件工作台 */
+.machine {
+  margin-top: 22px;
+  padding: 16px 15px 14px;
+  background: #1d2436;
+  border: 1px solid #5b6b8c;
+  border-radius: 10px;
+}
+
+.machine h2 {
+  color: #bcd3ff;
+  font-size: 1.08rem;
+}
+
+.m-actions {
+  display: flex;
+  align-items: end;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 10px 0;
+}
+
+.m-actions label {
+  display: grid;
+  gap: 3px;
+  font-size: .82rem;
+  color: #d4deef;
+}
+
+.m-info {
+  font-size: .82rem;
+  color: #aebbd6;
+}
+
+.m-layers {
+  margin-top: 6px;
+}
+
+.layers .top-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: crosshair;
+}
+
+.m-mode {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  align-items: center;
+  font-size: .85rem;
+  color: #d7e0f2;
+  margin: 8px 0 4px;
+}
+
+.m-mode label {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.m-form {
+  grid-template-columns: repeat(3, minmax(120px, 220px));
+  justify-content: start;
+  margin: 6px 0 10px;
+}
+
+.m-zones {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.m-zones h3 {
+  font-size: .86rem;
+  color: #cdd9f2;
+  margin-bottom: 4px;
+}
+
+.m-zones ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.m-zones li {
+  font-size: .82rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.m-zones li button {
+  padding: 1px 7px;
+  font-size: .76rem;
+}
+
+.m-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 10px 0;
+}
+
+.m-listen {
+  margin-top: 4px;
+}
+
+.m-hint {
+  font-size: .78rem;
+  color: #9fb0cf;
+  margin-top: 8px;
+}
+
+.m-metrics {
+  font-size: .8rem;
+  color: #cdd8ee;
+  margin-top: 8px;
+  display: grid;
+  gap: 2px;
+}
+
+.baseline-divider {
+  margin: 34px 0 4px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--edge);
+}
+
+.baseline-divider h2 {
+  color: #eec9bd;
+}
+
+@media(max-width:700px) {
+  .m-zones {
+    grid-template-columns: 1fr;
+  }
+  .m-form {
+    grid-template-columns: 1fr 1fr;
+  }
+}

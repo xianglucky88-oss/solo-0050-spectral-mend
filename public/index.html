@@ -1,10 +1,59 @@
 <!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>听纹修复</title><link rel="stylesheet" href="/style.css"><script type="module" src="/js/main.mjs"></script></head>
+<title>听纹修复</title><link rel="stylesheet" href="/style.css"><script type="module" src="/js/main.mjs"></script><script type="module" src="/js/machine-ui.mjs"></script></head>
 <body><main><header><div><h1>听纹修复</h1><p id="source-info">打开录音查看频谱</p></div><div class="actions">
 <label>导入 PCM WAV<input id="file" type="file" accept=".wav,audio/wav"></label><button id="demo">打开内置录音</button></div></header>
+
+<section class="machine" id="machine-lab" aria-label="机器声参考消声工作台">
+<h2>机器声参考消声 · 双件校准</h2>
+<div class="m-actions">
+<label>主录音（可单/双声道）<input id="m-main-file" type="file" accept=".wav,audio/wav"></label>
+<label>同机器单声道参考<input id="m-ref-file" type="file" accept=".wav,audio/wav"></label>
+<button id="m-demo" class="primary" type="button">打开内置双件示范</button>
+<span id="m-info" class="m-info">尚未打开两件音频</span>
+</div>
+<div class="layers m-layers">
+<canvas id="m-plot" width="1000" height="250" aria-label="主录音频谱"></canvas>
+<canvas id="m-overlay" class="top-overlay" width="1000" height="250" aria-label="圈选校准段与修复区"></canvas>
+</div>
+<div class="m-mode">
+<span>在图上横向拖选：</span>
+<label><input type="radio" name="m-mode" value="first" checked> 前校准段</label>
+<label><input type="radio" name="m-mode" value="second"> 后校准段</label>
+<label><input type="radio" name="m-mode" value="repair"> 修复区（可多个）</label>
+<label class="m-check"><input type="checkbox" id="m-coverage" checked> 查看参考覆盖</label>
+</div>
+<form id="m-form" class="m-form">
+<label>开始 / 秒<input name="start" type="number" step="any" required></label>
+<label>结束 / 秒<input name="end" type="number" step="any" required></label>
+<button type="submit">把数值填入所选目标</button>
+</form>
+<div class="m-zones">
+<div><h3>前后纯机器声校准段</h3><ul id="m-cal-list"></ul></div>
+<div><h3>修复区（仅与参考覆盖重合处消声）</h3><ul id="m-repair-list"></ul></div>
+</div>
+<div class="m-buttons">
+<button id="m-calibrate" class="primary" type="button" disabled>校准并共同确认</button>
+<button id="m-generate" class="primary" type="button" disabled>生成消声成品</button>
+</div>
+<div class="listen m-listen">
+<div role="group" aria-label="同位置对听">
+<button id="m-src-main" type="button" aria-pressed="true" disabled>主录音</button>
+<button id="m-src-ref" type="button" aria-pressed="false" disabled>校准参考</button>
+<button id="m-src-result" type="button" aria-pressed="false" disabled>消声成品</button>
+</div>
+<audio id="m-audio" controls preload="metadata"></audio>
+<button id="m-download" type="button" disabled>下载成品 WAV</button>
+</div>
+<p class="m-hint">生成前可用“主录音 / 校准参考”在同一播放位置对听响动是否对齐；绿色带为参考覆盖。校准段、圈外与未覆盖处逐码保留。</p>
+<p id="m-status" role="status"></p>
+<div id="m-metrics" class="m-metrics"></div>
+</section>
+
+<div class="baseline-divider"><h2>频谱选区衰减（原有工作台）</h2></div>
+
 <section class="work"><h2>频谱</h2><div class="spectrum"><span id="max-freq"></span><div class="layers"><canvas id="plot" width="900" height="290" aria-label="录音的时间频率图"></canvas><canvas id="mask" width="900" height="290" aria-label="拖动以填充选区范围"></canvas></div><div class="axis"><span>0 秒</span><span id="max-time"></span></div></div>
 <div class="listen"><div role="group" aria-label="对听信号"><button id="original" aria-pressed="true" disabled>原声</button><button id="result" aria-pressed="false" disabled>修复</button></div><audio controls preload="metadata"></audio><button id="export" disabled>导出 WAV</button></div></section>
-<section class="edit"><div><h2>频谱选区</h2><form><label>窗长<select name="size"><option>256</option><option selected>512</option><option>1024</option></select></label>
+<section class="edit"><div><h2>频谱选区</h2><form id="spectral-form"><label>窗长<select name="size"><option>256</option><option selected>512</option><option>1024</option></select></label>
 <label>开始 / 秒<input name="start" type="number" step="any" required></label><label>结束 / 秒<input name="end" type="number" step="any" required></label><label>低频 / 赫兹<input name="low" type="number" step="any" required></label><label>高频 / 赫兹<input name="high" type="number" step="any" required></label><label>衰减 / dB<input name="db" type="number" step="any" value="18" required></label><button id="add" disabled>添加选区</button></form></div>
 <div class="render"><ul id="regions"></ul><button id="apply" class="primary" disabled>生成修复</button><p id="status" role="status"></p><p id="metrics"></p></div></section></main></body></html>

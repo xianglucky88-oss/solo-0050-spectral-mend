@@ -1,4 +1,5 @@
 import { encode } from './encode.mjs'
+import { machineDemo } from './machine-demo.mjs'
 
 export function demo() {
   const rate = 16000, frames = rate * 3
@@ -11,6 +12,16 @@ export function demo() {
       * (channel === 0 ? .27 : .20) * Math.sin(2 * Math.PI * 1600 * time + channel)
     return voice * gain + hum
   }))
-  return { wav: encode({ tracks, rate, frames }).toString('base64'),
+  const result = { wav: encode({ tracks, rate, frames }).toString('base64'),
     region: { start: 0.63, end: 2.12, low: 1450, high: 1750, db: 26 } }
+  // 附加“双件机器参考”示范，但设为不可枚举：{...demo()} 不会把参考字段带入
+  // 原有频谱修复工作流，直接访问 demo().referenceWav 仍可发现它。
+  try {
+    const machine = machineDemo()
+    for (const key of ['mainWav', 'referenceWav', 'first', 'second', 'repairs', 'stable']) {
+      Object.defineProperty(result, key, { value: machine[key], enumerable: false, configurable: true })
+    }
+    Object.defineProperty(result, 'machine', { value: machine, enumerable: false, configurable: true })
+  } catch { /* 附加示范失败不影响原有内置录音 */ }
+  return result
 }
