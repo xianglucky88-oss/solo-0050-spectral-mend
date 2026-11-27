@@ -26,6 +26,11 @@
     {
       "workflow_id": "output",
       "command": "node --input-type=module -e 'import {inspect,repair} from \"./server/repair/session.mjs\"; import {demo} from \"./server/audio/demo.mjs\"; const sample=demo(); const a=repair({...sample,regions:[sample.region]}); const b=inspect(a); if(b.frames!==48000||a.metrics.length!==2||!a.metrics.every(c=>c.differenceRms>0))process.exit(1); console.log(a.metrics);'"
+    },
+    {
+      "workflow_id": "lock-relocate",
+      "name": "落锁对轨：双路唯一辨认、32 帧原码搬迁、16/2 保护与 5% 接声",
+      "command": "node scripts/lock-checks.mjs"
     }
   ]
 }

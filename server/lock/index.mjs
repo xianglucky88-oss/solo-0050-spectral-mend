@@ -1,0 +1,11 @@
+// 落锁对轨能力的统一入口（规范实现位于本目录各模块）。
+export const FEATURE = 'lock-relocate'
+export { BLOCK_FRAMES, EDGE_FRAMES, JOIN_FRAMES, sliceOf, validateGeometry, legalTargetRange } from './geometry.mjs'
+export { detectImpact, detectLocks, onsetProfile, DETECT_DEFAULTS } from './detect.mjs'
+export { fitStems, fitTone, detectFrequencies, stemLevelsAt, evaluateEnvelope, ENVELOPE_TOLERANCE } from './envelope.mjs'
+export { reconstructInterval } from './motor.mjs'
+export { relocate, previewFeasibility, verifyInvariants } from './relocate.mjs'
+export { parseLockRequest } from './params.mjs'
+export { lockInspect, lockMove, lockDemo } from './session.mjs'
+export { buildLockDemoPcm, LOCK_DEMO } from './demo.mjs'
+export { decodePcm16, encodePcm16Wav } from '../audio/pcm16.mjs'

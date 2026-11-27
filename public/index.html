@@ -1,10 +1,43 @@
 <!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>听纹修复</title><link rel="stylesheet" href="/style.css"><script type="module" src="/js/main.mjs"></script></head>
+<title>听纹修复</title><link rel="stylesheet" href="/style.css"><script type="module" src="/js/main.mjs"></script><script type="module" src="/js/lock.mjs"></script></head>
 <body><main><header><div><h1>听纹修复</h1><p id="source-info">打开录音查看频谱</p></div><div class="actions">
 <label>导入 PCM WAV<input id="file" type="file" accept=".wav,audio/wav"></label><button id="demo">打开内置录音</button></div></header>
 <section class="work"><h2>频谱</h2><div class="spectrum"><span id="max-freq"></span><div class="layers"><canvas id="plot" width="900" height="290" aria-label="录音的时间频率图"></canvas><canvas id="mask" width="900" height="290" aria-label="拖动以填充选区范围"></canvas></div><div class="axis"><span>0 秒</span><span id="max-time"></span></div></div>
 <div class="listen"><div role="group" aria-label="对听信号"><button id="original" aria-pressed="true" disabled>原声</button><button id="result" aria-pressed="false" disabled>修复</button></div><audio controls preload="metadata"></audio><button id="export" disabled>导出 WAV</button></div></section>
+<section class="work locklab" id="lock-lab" aria-label="落锁对轨">
+<h2>落锁对轨 · 两次落锁时刻搬迁</h2>
+<p class="lk-hint">打开「落锁样本」或导入自己的双声道 PCM WAV。先在波形上横向拖出圈选<b>改动段</b>，再为每次落锁填写<b>原声搜索范围</b>与<b>目标帧</b>；点「辨认撞击」会在生成前显示<b>零起算源帧</b>。撞击须左右两路同时确认，搜索范围不唯一时请重圈。</p>
+<div class="lk-toolbar">
+<button id="lk-demo" type="button">打开落锁样本</button>
+<label class="lk-file">导入双声道 WAV<input id="lk-file" type="file" accept=".wav,audio/wav"></label>
+<span id="lk-source-info">尚未载入音频</span>
+</div>
+<canvas id="lk-wave" width="1100" height="180" aria-label="波形与改动段圈选，横向拖动圈定改动段"></canvas>
+<div class="lk-axis"><span>0 帧（零起算）</span><span id="lk-total-frames">—</span></div>
+<div class="lk-seg">
+<label>改动段起帧<input id="lk-seg-start" type="number" step="1" inputmode="numeric"></label>
+<label>改动段止帧（不含）<input id="lk-seg-end" type="number" step="1" inputmode="numeric"></label>
+<span class="lk-rule">段首尾各 16 帧保留；每块搬 32 帧双路原码；目标片之间及与保留区至少留 2 帧接声。</span>
+</div>
+<div id="lk-rows" class="lk-rows"></div>
+<div class="lk-presets">
+<button type="button" class="lk-mini" id="lk-preset-amb">示例：第 1 路范围圈入两次撞击（演示重圈）</button>
+<button type="button" class="lk-mini" id="lk-preset-fade">示例：第 1 目标移到段尾渐弱处（演示接声无解）</button>
+<button type="button" class="lk-mini" id="lk-preset-reset">恢复有效参数</button>
+</div>
+<div class="lk-actions">
+<button id="lk-detect" class="primary" type="button" disabled>① 辨认撞击 · 显示零起算源帧</button>
+<button id="lk-generate" class="primary" type="button" disabled>② 生成落锁搬迁</button>
+<span class="lk-spacer"></span>
+<button id="lk-original" type="button" aria-pressed="false" disabled>听原声</button>
+<button id="lk-result" type="button" aria-pressed="true" disabled>听搬迁结果</button>
+<button id="lk-download" type="button" disabled>下载 PCM16 WAV</button>
+</div>
+<audio id="lk-audio" controls preload="metadata"></audio>
+<p id="lk-status" role="status"></p>
+<pre id="lk-report" class="lk-report" hidden></pre>
+</section>
 <section class="edit"><div><h2>频谱选区</h2><form><label>窗长<select name="size"><option>256</option><option selected>512</option><option>1024</option></select></label>
 <label>开始 / 秒<input name="start" type="number" step="any" required></label><label>结束 / 秒<input name="end" type="number" step="any" required></label><label>低频 / 赫兹<input name="low" type="number" step="any" required></label><label>高频 / 赫兹<input name="high" type="number" step="any" required></label><label>衰减 / dB<input name="db" type="number" step="any" value="18" required></label><button id="add" disabled>添加选区</button></form></div>
 <div class="render"><ul id="regions"></ul><button id="apply" class="primary" disabled>生成修复</button><p id="status" role="status"></p><p id="metrics"></p></div></section></main></body></html>
