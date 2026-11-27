@@ -26,6 +26,11 @@
     {
       "workflow_id": "output",
       "command": "node --input-type=module -e 'import {inspect,repair} from \"./server/repair/session.mjs\"; import {demo} from \"./server/audio/demo.mjs\"; const sample=demo(); const a=repair({...sample,regions:[sample.region]}); const b=inspect(a); if(b.frames!==48000||a.metrics.length!==2||!a.metrics.every(c=>c.differenceRms>0))process.exit(1); console.log(a.metrics);'"
+    },
+    {
+      "workflow_id": "workbench",
+      "name": "帧片段工作台：出场身份跟随、硬切隔离、等长替换不变性、定位分段透明性与 PCM16 拼接",
+      "command": "node scripts/workbench-checks.mjs"
     }
   ]
 }

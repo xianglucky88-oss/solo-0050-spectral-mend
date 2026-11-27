@@ -7,4 +7,65 @@
 <div class="listen"><div role="group" aria-label="对听信号"><button id="original" aria-pressed="true" disabled>原声</button><button id="result" aria-pressed="false" disabled>修复</button></div><audio controls preload="metadata"></audio><button id="export" disabled>导出 WAV</button></div></section>
 <section class="edit"><div><h2>频谱选区</h2><form><label>窗长<select name="size"><option>256</option><option selected>512</option><option>1024</option></select></label>
 <label>开始 / 秒<input name="start" type="number" step="any" required></label><label>结束 / 秒<input name="end" type="number" step="any" required></label><label>低频 / 赫兹<input name="low" type="number" step="any" required></label><label>高频 / 赫兹<input name="high" type="number" step="any" required></label><label>衰减 / dB<input name="db" type="number" step="any" value="18" required></label><button id="add" disabled>添加选区</button></form></div>
-<div class="render"><ul id="regions"></ul><button id="apply" class="primary" disabled>生成修复</button><p id="status" role="status"></p><p id="metrics"></p></div></section></main></body></html>
+<div class="render"><ul id="regions"></ul><button id="apply" class="primary" disabled>生成修复</button><p id="status" role="status"></p><p id="metrics"></p></div></section>
+
+<section class="bench" id="workbench" aria-label="帧片段工作台">
+<h2>帧片段工作台 · 按帧裁切 / 重排复用 / 选框跟出场 / 硬切隔离</h2>
+<div class="bench-bar">
+  <button id="wb-demo" type="button">打开 A-B-A 工作台示例</button>
+  <label class="wb-file">导入 PCM WAV<input id="wb-file" type="file" accept=".wav,audio/wav"></label>
+  <label>窗长<select id="wb-size"><option>256</option><option selected>512</option><option>1024</option></select></label>
+  <span id="wb-source-info">尚未载入工作台声音</span>
+</div>
+
+<div class="bench-cutter">
+  <strong>按帧裁出源段：</strong>
+  <label>源开始帧<input id="wb-cut-start" type="number" step="1" value="3200"></label>
+  <label>源结束帧<input id="wb-cut-end" type="number" step="1" value="9920"></label>
+  <label>名称<input id="wb-cut-id" type="text" placeholder="A" size="4"></label>
+  <button id="wb-cut" type="button" disabled>裁出片段并入库</button>
+  <span id="wb-cut-hint" class="hint"></span>
+</div>
+
+<div class="bench-clips"><strong>源段库（同一源段可多次放置）：</strong><ul id="wb-clips"></ul></div>
+
+<div class="bench-timeline-wrap">
+  <strong>拼接顺序（块间竖钮切换硬切；选框绑定“出场”身份）：</strong>
+  <div id="wb-timeline" class="wb-timeline" data-testid="timeline"></div>
+</div>
+
+<div class="spectrum wb-spectrum">
+  <div class="layers">
+    <canvas id="wb-plot" width="900" height="250" aria-label="拼接谱图"></canvas>
+    <canvas id="wb-mask" width="900" height="250" aria-label="在拼接谱图拖选频带"></canvas>
+  </div>
+  <div class="axis"><span>0 秒</span><span id="wb-max-time"></span></div>
+</div>
+
+<form id="wb-region-form" class="wb-region-form">
+  <label>绑定出场<select name="take" aria-label="绑定出场"></select></label>
+  <label>开始/秒(出场内)<input name="start" type="number" step="any" required></label>
+  <label>结束/秒(出场内)<input name="end" type="number" step="any" required></label>
+  <label>低频/Hz<input name="low" type="number" step="any" value="150" required></label>
+  <label>高频/Hz<input name="high" type="number" step="any" value="1200" required></label>
+  <label>衰减/dB<input name="db" type="number" step="any" value="20" required></label>
+  <button id="wb-add-region" type="submit">添加选框</button>
+</form>
+<ul id="wb-regions" class="wb-regions" data-testid="wb-regions"></ul>
+
+<div class="listen wb-listen">
+  <div role="group" aria-label="工作台对听">
+    <button id="wb-original" type="button" aria-pressed="true" disabled>原声 · 现顺序</button>
+    <button id="wb-result" type="button" aria-pressed="false" disabled>修复</button>
+  </div>
+  <audio id="wb-audio" controls preload="metadata"></audio>
+  <button id="wb-export" type="button" disabled>下载修复 WAV</button>
+</div>
+<div class="bench-actions">
+  <button id="wb-apply" class="primary" type="button" disabled>生成拼接修复</button>
+  <span id="wb-status" role="status"></span>
+  <span id="wb-metrics"></span>
+</div>
+</section>
+<script type="module" src="/js/workbench-app.mjs"></script>
+</main></body></html>

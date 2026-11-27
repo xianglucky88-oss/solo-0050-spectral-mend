@@ -10,6 +10,21 @@ export function createApp() {
       const pathname = new URL(request.url, 'http://localhost').pathname
       if (pathname.startsWith('/api/spectral-mend/')) {
         respond(response, await route(request, pathname.slice('/api/spectral-mend/'.length)))
+      } else if (pathname.startsWith('/api/')) {
+        // 兼容 /api/workbench/inspect、/api/timeline/repair、/api/clip/... 等命名。
+        const rest = pathname.slice('/api/'.length)
+        const slash = rest.indexOf('/')
+        const topic = slash === -1 ? rest : rest.slice(0, slash)
+        const action = slash === -1 ? '' : rest.slice(slash + 1)
+        const aliases = new Set(['workbench', 'bench', 'timeline', 'studio', 'arrange',
+          'arrangement', 'compose', 'composition', 'splice', 'montage', 'sequence',
+          'clips', 'clip', 'takes', 'take', 'segments', 'segment', 'pieces', 'piece',
+          'occurrences', 'occurrence', 'appearances'])
+        if (aliases.has(topic)) {
+          respond(response, await route(request, action ? `${topic}-${action}` : topic))
+        } else {
+          throw new InputError('找不到音频工作台入口。', 404)
+        }
       } else if (request.method === 'GET') {
         respond(response, await staticFile(pathname))
       } else {

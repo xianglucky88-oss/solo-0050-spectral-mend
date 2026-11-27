@@ -24,7 +24,12 @@
     {
       "id": "ui",
       "path": "public/js",
-      "responsibility": "频谱选区交互和双版本对听"
+      "responsibility": "频谱选区交互、工作台重排/互换/分段/硬切与双版本对听"
+    },
+    {
+      "id": "workbench",
+      "path": "server/workbench",
+      "responsibility": "按帧裁段、出场身份、布局、硬切跨度、拼接谱图与隔离修复"
     }
   ],
   "workflows": [
@@ -115,6 +120,26 @@
       "steps": [
         "从 POST repair 解析业务输入",
         "应用领域状态与边界，保持源帧数并给出逐声道差值"
+      ]
+    },
+    {
+      "id": "workbench",
+      "name": "帧片段工作台",
+      "entry": "POST workbench-repair",
+      "success": "选框随出场移动；硬切隔离；等长替换不改变另一侧读数与样点；定位分段全透明",
+      "failure": "缺帧区间、越界选区或拼接超时长拒绝",
+      "verification": "node scripts/workbench-checks.mjs",
+      "module_ids": [
+        "audio",
+        "spectrum",
+        "repair",
+        "workbench",
+        "ui"
+      ],
+      "steps": [
+        "按帧裁段并以稳定出场身份重排/复用/互换",
+        "硬切跨度独立加窗重建，定位分段合并透明",
+        "输出 PCM16 拼接 WAV，保留采样率、声道顺序与帧数"
       ]
     }
   ],
