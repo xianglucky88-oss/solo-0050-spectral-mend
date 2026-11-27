@@ -10,9 +10,11 @@
 
 修复结果的峰值与差值 RMS 在量化前计算，饱和帧对应量化溢出位置。导出执行舍入并饱和到 PCM16。对听使用同一个播放控件，切换信号时尽量延续当前播放点。
 
+嗡声路线用于设备嗡声升频、与伴随音交会的情形。编辑者先在原谱图上圈出嗡声的时频范围，再在交会前后各点一次嗡声；定位点与声学证据须能唯一认出目标。逐窗判定双峰：两峰至少连续三个窗且至少相隔四格频格才算确认。合峰、缺声及归属不明处逐窗标为未确认并保留原样，其中能分出的双峰可补点。改点、补点、换录音、换窗或重圈后必须重新确认。只衰减确认片段并平滑接回原声；每段稳定双峰取居中一窗核对，过渡不占此窗，嗡声至少降 6 dB、伴随音变化小于 1 dB 才保留。圈定时段外原样，试听和下载共用等长结果，矩形选区入口继续可用。
+
 ## 接口
 
-`GET /api/spectral-mend/demo` 返回内置录音及建议区。`POST /api/spectral-mend/inspect` 接收 Base64 `wav` 和可选 `size` 并返回谱图。`POST /api/spectral-mend/repair` 另收 `regions`，各项含 `start`、`end`、`low`、`high`、`db`，返回 PCM WAV、谱图和逐声道计量。
+`GET /api/spectral-mend/demo` 返回内置录音、建议矩形区与建议嗡声圈定（`preset`）。`POST /api/spectral-mend/inspect` 接收 Base64 `wav` 和可选 `size` 并返回谱图。`POST /api/spectral-mend/trace` 接收 `trace`（`range`、`points`、`db`）并返回逐窗判定、确认片段、未确认清单和居中窗核对，不改变音频。`POST /api/spectral-mend/repair` 另收 `regions`（各项含 `start`、`end`、`low`、`high`、`db`）与可选 `trace`，返回 PCM WAV、谱图、逐声道计量和 `trace` 报告。
 
 ## 模块
 

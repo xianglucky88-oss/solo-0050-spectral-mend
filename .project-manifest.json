@@ -65,6 +65,26 @@
       ]
     },
     {
+      "id": "trace",
+      "name": "嗡声路线修复",
+      "entry": "POST trace / POST repair",
+      "success": "仅确认片段被衰减并平滑接回原声",
+      "failure": "定位点无唯一双峰或居中窗核对不通过",
+      "verification": "node --input-type=module -e 'import {trace,repair} from \"./server/repair/session.mjs\"; import {demo} from \"./server/audio/demo.mjs\"; const s=demo(); const t=trace({wav:s.wav,size:512,trace:s.preset}); if(!t.pass||t.confirmed.length!==2)process.exit(1); const r=repair({wav:s.wav,size:512,regions:[],trace:s.preset}); if(r.trace.confirmed.length!==2||!r.trace.verification.every(v=>v.pass&&v.humDropDb>=6&&Math.abs(v.companionChangeDb)<1))process.exit(1); console.log(t.confirmed.length,r.trace.summary.unconfirmed);'",
+      "module_ids": [
+        "http",
+        "audio",
+        "spectrum",
+        "repair",
+        "ui"
+      ],
+      "steps": [
+        "从 POST trace 解析圈定范围与定位点",
+        "逐窗判定双峰并标出未确认处",
+        "只对确认片段衰减，居中窗核对后导出"
+      ]
+    },
+    {
       "id": "edit",
       "name": "频带衰减",
       "entry": "POST repair",

@@ -3,8 +3,22 @@
 <title>听纹修复</title><link rel="stylesheet" href="/style.css"><script type="module" src="/js/main.mjs"></script></head>
 <body><main><header><div><h1>听纹修复</h1><p id="source-info">打开录音查看频谱</p></div><div class="actions">
 <label>导入 PCM WAV<input id="file" type="file" accept=".wav,audio/wav"></label><button id="demo">打开内置录音</button></div></header>
-<section class="work"><h2>频谱</h2><div class="spectrum"><span id="max-freq"></span><div class="layers"><canvas id="plot" width="900" height="290" aria-label="录音的时间频率图"></canvas><canvas id="mask" width="900" height="290" aria-label="拖动以填充选区范围"></canvas></div><div class="axis"><span>0 秒</span><span id="max-time"></span></div></div>
+<section class="work"><h2>频谱</h2><div class="spectrum"><span id="max-freq"></span><div class="layers"><canvas id="plot" width="900" height="290" aria-label="录音的时间频率图"></canvas><canvas id="mask" width="900" height="290" aria-label="拖动圈定时段，点击放置嗡声定位点"></canvas></div><div class="axis"><span>0 秒</span><span id="max-time"></span></div></div>
 <div class="listen"><div role="group" aria-label="对听信号"><button id="original" aria-pressed="true" disabled>原声</button><button id="result" aria-pressed="false" disabled>修复</button></div><audio controls preload="metadata"></audio><button id="export" disabled>导出 WAV</button></div></section>
-<section class="edit"><div><h2>频谱选区</h2><form><label>窗长<select name="size"><option>256</option><option selected>512</option><option>1024</option></select></label>
-<label>开始 / 秒<input name="start" type="number" step="any" required></label><label>结束 / 秒<input name="end" type="number" step="any" required></label><label>低频 / 赫兹<input name="low" type="number" step="any" required></label><label>高频 / 赫兹<input name="high" type="number" step="any" required></label><label>衰减 / dB<input name="db" type="number" step="any" value="18" required></label><button id="add" disabled>添加选区</button></form></div>
-<div class="render"><ul id="regions"></ul><button id="apply" class="primary" disabled>生成修复</button><p id="status" role="status"></p><p id="metrics"></p></div></section></main></body></html>
+<section class="edit">
+<div><h2>嗡声路线</h2><p class="hint">先在原谱图上圈出嗡声的时频范围，再在交会前后各点一次嗡声。改点、补点、换录音、换窗或重圈后都会重新确认。</p>
+<form id="trace-form">
+<label class="wide">操作<select name="mode"><option value="circle">圈定时段</option><option value="point">放置定位点</option><option value="region">矩形选区</option></select></label>
+<label>圈定开始 / 秒<input name="start" type="number" step="any"></label><label>圈定结束 / 秒<input name="end" type="number" step="any"></label>
+<label>低频 / 赫兹<input name="low" type="number" step="any"></label><label>高频 / 赫兹<input name="high" type="number" step="any"></label>
+<label>嗡声衰减 / dB<input name="db" type="number" step="any" value="18"></label>
+<div class="buttons"><button id="apply-circle" type="button" disabled>应用圈定</button><button id="clear-points" type="button" disabled>清除定位点</button></div>
+</form>
+<ul id="points"></ul>
+<h3>确认结果</h3><ul id="trials"></ul>
+</div>
+<div class="render"><h2>矩形选区</h2>
+<form id="region-form"><label>窗长<select name="size"><option>256</option><option selected>512</option><option>1024</option></select></label>
+<label>开始 / 秒<input name="start" type="number" step="any" required></label><label>结束 / 秒<input name="end" type="number" step="any" required></label><label>低频 / 赫兹<input name="low" type="number" step="any" required></label><label>高频 / 赫兹<input name="high" type="number" step="any" required></label><label>衰减 / dB<input name="db" type="number" step="any" value="18" required></label><button id="add" type="button" disabled>添加选区</button></form>
+<ul id="regions"></ul><button id="apply" class="primary" disabled>生成修复</button><p id="status" role="status"></p><p id="metrics"></p></div>
+</section></main></body></html>

@@ -202,3 +202,74 @@ form input,select {
     flex-basis: 100%;
   }
 }
+
+.hint {
+  font-size: .8rem;
+  color: #b9aac8;
+  margin: 4px 0 6px;
+}
+
+#trace-form {
+  grid-template-columns: repeat(3,minmax(0,1fr));
+}
+
+#trace-form .wide {
+  grid-column: span 3;
+}
+
+#trace-form .buttons {
+  grid-column: span 3;
+  display: flex;
+  gap: 8px;
+}
+
+h3 {
+  font-size: .9rem;
+  color: #eec9bd;
+  margin: 12px 0 4px;
+}
+
+#points,#trials {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+  max-height: 220px;
+  overflow: auto;
+}
+
+#points li,#trials li {
+  font-size: .78rem;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 4px 6px;
+  border-radius: 4px;
+  background: #242036;
+}
+
+#trials li.summary {
+  color: #cbb8dd;
+  background: transparent;
+  padding-inline: 0;
+}
+
+#trials li.confirmed {
+  border-left: 3px solid #87e0b0;
+}
+
+#trials li.unconfirmed {
+  border-left: 3px solid #c3a7ff;
+}
+
+#points li.empty,#trials li.empty {
+  color: #9b8fac;
+  background: transparent;
+  padding-inline: 0;
+}
+
+#points button,#trials button {
+  padding: 1px 6px;
+  font-size: .75rem;
+}
