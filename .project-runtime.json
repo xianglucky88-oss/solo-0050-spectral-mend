@@ -5,7 +5,16 @@
     ".mjs"
   ],
   "build_command": "npm run build",
-  "testing": "deferred",
+  "testing": {
+    "command": "npm test",
+    "suites": [
+      "tests/engine-check.mjs",
+      "tests/http-check.mjs",
+      "tests/compat-check.mjs",
+      "tests/boundary-check.mjs"
+    ],
+    "memory_suite": "node --expose-gc tests/memory-check.mjs"
+  },
   "workflow_checks": [
     {
       "workflow_id": "wav",
@@ -26,6 +35,22 @@
     {
       "workflow_id": "output",
       "command": "node --input-type=module -e 'import {inspect,repair} from \"./server/repair/session.mjs\"; import {demo} from \"./server/audio/demo.mjs\"; const sample=demo(); const a=repair({...sample,regions:[sample.region]}); const b=inspect(a); if(b.frames!==48000||a.metrics.length!==2||!a.metrics.every(c=>c.differenceRms>0))process.exit(1); console.log(a.metrics);'"
+    },
+    {
+      "workflow_id": "stream_engine",
+      "command": "node tests/engine-check.mjs"
+    },
+    {
+      "workflow_id": "http_e2e",
+      "command": "node tests/http-check.mjs"
+    },
+    {
+      "workflow_id": "legacy_compat",
+      "command": "node tests/compat-check.mjs"
+    },
+    {
+      "workflow_id": "bounded_memory",
+      "command": "node --expose-gc tests/memory-check.mjs"
     }
   ]
 }

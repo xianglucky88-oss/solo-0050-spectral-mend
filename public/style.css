@@ -96,6 +96,56 @@ header p,#metrics {
   margin-top: 3px;
 }
 
+.nav {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.zoom,.scrub {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.scrub label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: .82rem;
+  color: #d4c4df;
+}
+
+.scrub input {
+  width: 96px;
+  padding: 3px 5px;
+  border: 1px solid var(--edge);
+  background: #242036;
+  border-radius: 4px;
+}
+
+.minimap {
+  margin-bottom: 8px;
+}
+
+.minimap canvas {
+  width: 100%;
+  height: auto;
+  display: block;
+  border: 1px solid #695875;
+  border-radius: 4px;
+}
+
+.audition {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 button,input,select {
   font: inherit;
   color: inherit;

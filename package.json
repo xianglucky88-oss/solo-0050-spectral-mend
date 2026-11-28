@@ -4,5 +4,10 @@
   "private": true,
   "type": "module",
   "engines": {"node": ">=20"},
-  "scripts": {"start": "node server/index.mjs", "build": "node scripts/check-modules.mjs"}
+  "scripts": {
+    "start": "node server/index.mjs",
+    "build": "node scripts/check-modules.mjs",
+    "test": "node tests/engine-check.mjs && node tests/http-check.mjs && node tests/compat-check.mjs && node tests/boundary-check.mjs",
+    "test:memory": "node --expose-gc tests/memory-check.mjs"
+  }
 }

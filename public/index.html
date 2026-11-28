@@ -3,8 +3,19 @@
 <title>听纹修复</title><link rel="stylesheet" href="/style.css"><script type="module" src="/js/main.mjs"></script></head>
 <body><main><header><div><h1>听纹修复</h1><p id="source-info">打开录音查看频谱</p></div><div class="actions">
 <label>导入 PCM WAV<input id="file" type="file" accept=".wav,audio/wav"></label><button id="demo">打开内置录音</button></div></header>
-<section class="work"><h2>频谱</h2><div class="spectrum"><span id="max-freq"></span><div class="layers"><canvas id="plot" width="900" height="290" aria-label="录音的时间频率图"></canvas><canvas id="mask" width="900" height="290" aria-label="拖动以填充选区范围"></canvas></div><div class="axis"><span>0 秒</span><span id="max-time"></span></div></div>
-<div class="listen"><div role="group" aria-label="对听信号"><button id="original" aria-pressed="true" disabled>原声</button><button id="result" aria-pressed="false" disabled>修复</button></div><audio controls preload="metadata"></audio><button id="export" disabled>导出 WAV</button></div></section>
-<section class="edit"><div><h2>频谱选区</h2><form><label>窗长<select name="size"><option>256</option><option selected>512</option><option>1024</option></select></label>
+<section class="work"><h2>频谱</h2>
+<div class="nav"><div class="zoom">
+<button id="zoom-in" type="button" disabled>放大时间</button>
+<button id="zoom-out" type="button" disabled>缩小时间</button>
+<button id="pan-left" type="button" disabled>向左平移</button>
+<button id="pan-right" type="button" disabled>向右平移</button>
+<button id="reset-view" type="button" disabled>全景</button></div>
+<div class="scrub"><label>跳听位置 / 秒<input id="jump" type="number" step="any" min="0" disabled></label>
+<button id="jump-go" type="button" disabled>跳转</button></div></div>
+<div class="minimap"><canvas id="mini" width="900" height="34" aria-label="录音全景与当前视区"></canvas></div>
+<div class="spectrum"><span id="max-freq"></span><div class="layers"><canvas id="plot" width="900" height="290" aria-label="录音的时间频率图"></canvas><canvas id="mask" width="900" height="290" aria-label="拖动以填充选区范围"></canvas></div><div class="axis"><span id="view-start">0 秒</span><span id="view-end"></span></div></div>
+<div class="listen"><div role="group" aria-label="对听信号"><button id="original" aria-pressed="true" disabled>原声</button><button id="result" aria-pressed="false" disabled>修复</button></div><audio controls preload="metadata"></audio>
+<div class="audition"><button id="audition" disabled>试听当前视区（≤10秒）</button><button id="export" disabled>导出整段 WAV</button></div></div></section>
+<section class="edit"><div><h2>频谱选区（坐标锚定原始录音）</h2><form><label>窗长<select name="size"><option>256</option><option selected>512</option><option>1024</option></select></label>
 <label>开始 / 秒<input name="start" type="number" step="any" required></label><label>结束 / 秒<input name="end" type="number" step="any" required></label><label>低频 / 赫兹<input name="low" type="number" step="any" required></label><label>高频 / 赫兹<input name="high" type="number" step="any" required></label><label>衰减 / dB<input name="db" type="number" step="any" value="18" required></label><button id="add" disabled>添加选区</button></form></div>
-<div class="render"><ul id="regions"></ul><button id="apply" class="primary" disabled>生成修复</button><p id="status" role="status"></p><p id="metrics"></p></div></section></main></body></html>
+<div class="render"><ul id="regions"></ul><button id="apply" class="primary" disabled>生成修复试听</button><p id="status" role="status"></p><p id="metrics"></p></div></section></main></body></html>

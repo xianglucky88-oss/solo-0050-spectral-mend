@@ -9,7 +9,8 @@ export function createApp() {
     try {
       const pathname = new URL(request.url, 'http://localhost').pathname
       if (pathname.startsWith('/api/spectral-mend/')) {
-        respond(response, await route(request, pathname.slice('/api/spectral-mend/'.length)))
+        const result = await route(request, pathname.slice('/api/spectral-mend/'.length), response)
+        if (!result?.streamed) respond(response, result)
       } else if (request.method === 'GET') {
         respond(response, await staticFile(pathname))
       } else {
@@ -17,6 +18,10 @@ export function createApp() {
       }
     } catch (error) {
       if (!(error instanceof InputError)) console.error(error)
+      if (response.headersSent) {
+        response.destroy()
+        return
+      }
       respond(response, { status: error instanceof InputError ? error.status : 500,
         body: { error: error instanceof InputError ? error.message : '处理失败，请重试。' } })
     }
