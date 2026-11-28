@@ -26,6 +26,18 @@
     {
       "workflow_id": "output",
       "command": "node --input-type=module -e 'import {inspect,repair} from \"./server/repair/session.mjs\"; import {demo} from \"./server/audio/demo.mjs\"; const sample=demo(); const a=repair({...sample,regions:[sample.region]}); const b=inspect(a); if(b.frames!==48000||a.metrics.length!==2||!a.metrics.every(c=>c.differenceRms>0))process.exit(1); console.log(a.metrics);'"
+    },
+    {
+      "workflow_id": "fold-analyze",
+      "command": "node --input-type=module -e 'import {inspect} from \"./server/fold/session.mjs\"; import {demo} from \"./server/fold/demo.mjs\"; const d=demo(); const a=inspect({wav:d.wav,start:d.circle.start,end:d.circle.end}); const s=a.bands.map(b=>b.status); if(![\"cancel\",\"single\",\"empty\",\"normal\"].every(x=>s.includes(x)))process.exit(1); console.log(s.join(\",\"));'"
+    },
+    {
+      "workflow_id": "fold-rescue",
+      "command": "node --input-type=module -e 'import {inspect,rescue} from \"./server/fold/session.mjs\"; import {demo} from \"./server/fold/demo.mjs\"; const d=demo(); const a=inspect({wav:d.wav,start:d.circle.start,end:d.circle.end}); const i=a.bands.findIndex(b=>b.status===\"cancel\"); const r=rescue({wav:d.wav,start:d.circle.start,end:d.circle.end,bands:[i]}); if(!r.verify.every(v=>v.ratio>=0.85&&v.ratio<=1.15)||r.saturation)process.exit(1); console.log(r.verify[0].ratio);'"
+    },
+    {
+      "workflow_id": "fold-guard",
+      "command": "node --input-type=module -e 'import {inspect,fold} from \"./server/fold/session.mjs\"; import {demo} from \"./server/fold/demo.mjs\"; import {encode} from \"./server/audio/encode.mjs\"; const mono=encode({tracks:[new Float64Array(48000)],rate:16000,frames:48000}).toString(\"base64\"); let ok=0; try{inspect({wav:mono,start:0,end:1})}catch(e){ok=e.message.includes(\"单声道\")?1:0} const d=demo(); const f=fold({wav:d.wav}); if(!ok||!f.wav)process.exit(1); console.log(f.wav.length);'"
     }
   ]
 }

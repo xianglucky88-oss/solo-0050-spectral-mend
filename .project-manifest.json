@@ -22,6 +22,11 @@
       "responsibility": "选区、跨窗重建、信号计量和导出"
     },
     {
+      "id": "fold",
+      "path": "server/fold",
+      "responsibility": "单喇叭折叠、频带电平比较、相消挽回和半码量化"
+    },
+    {
       "id": "ui",
       "path": "public/js",
       "responsibility": "频谱选区交互和双版本对听"
@@ -116,6 +121,57 @@
         "从 POST repair 解析业务输入",
         "应用领域状态与边界，保持源帧数并给出逐声道差值"
       ]
+    },
+    {
+      "id": "fold-analyze",
+      "name": "折叠电平比较",
+      "entry": "POST fold-mend/inspect",
+      "success": "同一频率刻度给出各频带合计与折叠电平及状态",
+      "failure": "单声道原件不可启用",
+      "verification": "node --input-type=module -e 'import {inspect} from \"./server/fold/session.mjs\"; import {demo} from \"./server/fold/demo.mjs\"; const d=demo(); const a=inspect({wav:d.wav,start:d.circle.start,end:d.circle.end}); const s=a.bands.map(b=>b.status); if(![\"cancel\",\"single\",\"empty\",\"normal\"].every(x=>s.includes(x)))process.exit(1); console.log(s.join(\",\"));'",
+      "module_ids": [
+        "audio",
+        "spectrum",
+        "fold",
+        "ui"
+      ],
+      "steps": [
+        "从 POST inspect 解析业务输入",
+        "应用领域状态与边界，低于 8 码标无有效内容，单侧有声不标相消"
+      ]
+    },
+    {
+      "id": "fold-rescue",
+      "name": "相消频带挽回",
+      "entry": "POST fold-mend/rescue",
+      "success": "成品各勾选带均方根为原合计值的 85–115%",
+      "failure": "非相消频带的勾选拒绝",
+      "verification": "node --input-type=module -e 'import {inspect,rescue} from \"./server/fold/session.mjs\"; import {demo} from \"./server/fold/demo.mjs\"; const d=demo(); const a=inspect({wav:d.wav,start:d.circle.start,end:d.circle.end}); const i=a.bands.findIndex(b=>b.status===\"cancel\"); const r=rescue({wav:d.wav,start:d.circle.start,end:d.circle.end,bands:[i]}); if(!r.verify.every(v=>v.ratio>=0.85&&v.ratio<=1.15)||r.saturation)process.exit(1); console.log(r.verify[0].ratio);'",
+      "module_ids": [
+        "audio",
+        "spectrum",
+        "fold"
+      ],
+      "steps": [
+        "从 POST rescue 解析业务输入",
+        "应用领域状态与边界，只处理圈内勾选频带并给出逐带核验"
+      ]
+    },
+    {
+      "id": "fold-guard",
+      "name": "等长单声道输出",
+      "entry": "POST fold-mend/fold",
+      "success": "普通折叠与成品共用原采样率等长单声道 PCM16",
+      "failure": "单声道原件不可启用",
+      "verification": "node --input-type=module -e 'import {inspect,fold} from \"./server/fold/session.mjs\"; import {demo} from \"./server/fold/demo.mjs\"; import {encode} from \"./server/audio/encode.mjs\"; const mono=encode({tracks:[new Float64Array(48000)],rate:16000,frames:48000}).toString(\"base64\"); let ok=0; try{inspect({wav:mono,start:0,end:1})}catch(e){ok=e.message.includes(\"单声道\")?1:0} const d=demo(); const f=fold({wav:d.wav}); if(!ok||!f.wav)process.exit(1); console.log(f.wav.length);'",
+      "module_ids": [
+        "audio",
+        "fold"
+      ],
+      "steps": [
+        "从 POST fold 解析业务输入",
+        "应用领域状态与边界，逐帧取左右平均并按半码远离零取整"
+      ]
     }
   ],
   "complexity": {
@@ -128,7 +184,11 @@
       "频谱共轭增益",
       "重叠相加重建",
       "量化前计量",
-      "原声与修复对听"
+      "原声与修复对听",
+      "倍频程频带电平比较",
+      "侧信号按带补回",
+      "半码远离零量化",
+      "折叠与成品对听"
     ]
   }
 }

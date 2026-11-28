@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>单喇叭交付 · 相消挽回</title><link rel="stylesheet" href="/style.css"><script type="module" src="/js/fold/main.mjs"></script></head>
+<body><main><header><div><h1>单喇叭交付</h1><p id="source-info">左右平均会让部分声音消失，圈时间比较电平并挽回相消频带</p></div><div class="actions">
+<a href="/">听纹修复</a><label>导入 PCM WAV<input id="file" type="file" accept=".wav,audio/wav"></label><button id="demo">打开内置录音</button></div></header>
+<section class="work"><h2>波形与圈选</h2><div class="spectrum"><div class="layers"><canvas id="wave" width="900" height="220" aria-label="左右声道波形"></canvas><canvas id="circle" width="900" height="220" aria-label="拖动以圈选时间"></canvas></div><div class="axis"><span>0 秒</span><span id="max-time"></span></div></div>
+<form id="circle-form"><label>开始 / 秒<input name="start" type="number" step="any" required disabled></label><label>结束 / 秒<input name="end" type="number" step="any" required disabled></label><button id="apply-circle" disabled>更新电平比较</button></form></section>
+<section class="work"><h2>频带电平比较 · 同一频率刻度</h2><canvas id="bands" width="900" height="300"></canvas>
+<p class="hint">合计值为两路均方的平均值开方，单位码；低于 8 码标无有效内容。只有原来有声且折叠后低至少 9 dB 的双侧有声频带可勾选挽回，单侧有声不标相消。</p>
+<ul id="band-list"></ul></section>
+<section class="work render"><h2>成品与对听</h2><button id="apply" class="primary" disabled>生成成品</button>
+<p id="status" role="status"></p><p id="verify"></p>
+<div class="listen"><div role="group" aria-label="对听信号"><button id="fold-play" aria-pressed="true" disabled>普通折叠</button><button id="product-play" aria-pressed="false" disabled>成品</button></div><audio controls preload="metadata"></audio></div>
+<div class="actions"><button id="download-fold" disabled>下载普通折叠 WAV</button><button id="download-product" disabled>下载成品 WAV</button></div></section></main></body></html>
